@@ -6,6 +6,7 @@ module PingPong
   ) where
 
 import Network.Transport.TCP (createTransport, defaultTCPParameters)
+import Control.Monad (forever)
 import Control.Distributed.Process
 import Control.Distributed.Process.Node
 import Data.Binary
@@ -23,26 +24,23 @@ data Protocol = Ping ProcessId
 
 instance Binary Protocol
 
-forever :: ProcessId -> ProcessId -> Process ()
-forever pingPid pongPid = do
-  _ <- liftIO $ putStrLn "ping"
-  _ <- send pongPid (Ping pingPid)
-  Pong pid <- expect
-  forever pingPid pongPid
-
 ping :: Process ()
 ping = do
   pingPid <- getSelfPid
   pongPid <- spawnLocal pong
-  forever pingPid pongPid
+  forever $ do
+      _ <- send pongPid (Ping pingPid)
+      _ <- liftIO $ putStrLn "ping sent"
+      Pong pid <- expect
+      liftIO $ putStrLn "pong received"
   
 pong :: Process ()
-pong = do
+pong = forever $ do
   myPid <- getSelfPid
   Ping pid <- expect
+  _ <- liftIO $ putStrLn "ping received"
   send pid (Pong myPid)
-  _ <- liftIO $ putStrLn "pong"
-  pong
+  liftIO $ putStrLn "pong sent"
 
 pingPongMain :: IO ()
 pingPongMain = do
