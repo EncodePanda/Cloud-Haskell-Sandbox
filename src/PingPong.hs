@@ -23,33 +23,29 @@ data Protocol = Ping ProcessId
 
 instance Binary Protocol
 
-ping :: ProcessId -> Process ()
-ping ppPid = do
-  selfPid <- getSelfPid
-  pongPid <- expect :: Process ProcessId
-  _ <- send pongPid (Ping selfPid)
-  Pong pongPid <- expect
-  _ <- liftIO $ putStrLn $ "pong received from " ++ (show pongPid)
-  send ppPid "done"
-  
-pong :: ProcessId -> Process ()
-pong pingPid = do
-  selfPid <- getSelfPid
-  Ping pid <- expect
-  _ <- liftIO $ putStrLn $ "ping received from " ++ (show pid)
-  send pid (Pong selfPid)
+forever :: ProcessId -> ProcessId -> Process ()
+forever pingPid pongPid = do
+  _ <- liftIO $ putStrLn "ping"
+  _ <- send pongPid (Ping pingPid)
+  Pong pid <- expect
+  forever pingPid pongPid
 
-pingpong :: Process ()
-pingpong = do
-  ppPid <- getSelfPid
-  pingPid <- spawnLocal $ ping ppPid
-  pongPid <- spawnLocal $ pong pingPid
-  _ <- send pingPid pongPid
-  _ <- expect :: Process String
-  return ()
+ping :: Process ()
+ping = do
+  pingPid <- getSelfPid
+  pongPid <- spawnLocal pong
+  forever pingPid pongPid
+  
+pong :: Process ()
+pong = do
+  myPid <- getSelfPid
+  Ping pid <- expect
+  send pid (Pong myPid)
+  _ <- liftIO $ putStrLn "pong"
+  pong
 
 pingPongMain :: IO ()
 pingPongMain = do
   Right t <- createTransport "127.0.0.1" "10501" defaultTCPParameters
   node <- newLocalNode t initRemoteTable
-  runProcess node pingpong
+  runProcess node ping
