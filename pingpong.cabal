@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     SimpleHello, SimplePingPong
+  exposed-modules:     SimpleHello, SimplePingPong, PingPong
   build-depends:       base >= 4.7 && < 5
                      , distributed-process >= 0.7.3
                      , network-transport-tcp

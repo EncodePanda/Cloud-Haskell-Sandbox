@@ -1,6 +1,6 @@
 module Main where
 
-import SimplePingPong
+import PingPong
 
 main :: IO ()
 main = pingPongMain
