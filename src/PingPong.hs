@@ -29,14 +29,14 @@ ping ppPid = do
   pongPid <- expect :: Process ProcessId
   _ <- send pongPid (Ping selfPid)
   Pong pongPid <- expect
-  _ <- liftIO $ putStrLn "PONG received"
+  _ <- liftIO $ putStrLn $ "pong received from " ++ (show pongPid)
   send ppPid "done"
   
 pong :: ProcessId -> Process ()
 pong pingPid = do
   selfPid <- getSelfPid
   Ping pid <- expect
-  _ <- liftIO $ putStrLn "PING RECEIVED"
+  _ <- liftIO $ putStrLn $ "ping received from " ++ (show pid)
   send pid (Pong selfPid)
 
 pingpong :: Process ()
