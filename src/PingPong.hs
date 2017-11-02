@@ -9,6 +9,7 @@ import Network.Transport.TCP (createTransport, defaultTCPParameters)
 import Control.Monad (forever)
 import Control.Distributed.Process
 import Control.Distributed.Process.Node
+import Control.Concurrent (threadDelay)
 import Data.Binary
 import Data.Typeable
 import GHC.Generics
@@ -32,7 +33,8 @@ ping = do
       _ <- send pongPid (Ping pingPid)
       _ <- liftIO $ putStrLn "ping sent"
       Pong pid <- expect
-      liftIO $ putStrLn "pong received"
+      _ <- liftIO $ putStrLn "pong received"
+      liftIO $ threadDelay 1000000
   
 pong :: Process ()
 pong = forever $ do
@@ -40,7 +42,8 @@ pong = forever $ do
   Ping pid <- expect
   _ <- liftIO $ putStrLn "ping received"
   send pid (Pong myPid)
-  liftIO $ putStrLn "pong sent"
+  _ <- liftIO $ putStrLn "pong sent"
+  liftIO $ threadDelay 1000000
 
 pingPongMain :: IO ()
 pingPongMain = do
