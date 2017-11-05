@@ -2,7 +2,7 @@ name:                pingpong
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/pingpong#readme
+homepage:            https://github.com/rabbitonweb/Cloud-Haskell-Sandbox/blob/master/README.md
 license:             BSD3
 license-file:        LICENSE
 author:              Pawel Szulc
@@ -41,4 +41,4 @@ test-suite pingpong-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/pingpong
+  location: https://github.com/rabbitonweb/Cloud-Haskell-Sandbox
