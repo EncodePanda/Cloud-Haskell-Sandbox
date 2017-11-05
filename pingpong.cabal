@@ -18,6 +18,8 @@ library
   exposed-modules:     SimpleHello, SimplePingPong, PingPong
   build-depends:       base >= 4.7 && < 5
                      , distributed-process >= 0.7.3
+                     , distributed-process-simplelocalnet
+                     , network-transport
                      , network-transport-tcp
                      , binary
   default-language:    Haskell2010

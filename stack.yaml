@@ -4,4 +4,5 @@ packages:
 - .
 extra-deps:
 - distributed-process-0.7.3
+- distributed-process-simplelocalnet-0.2.4
 resolver: lts-9.11
