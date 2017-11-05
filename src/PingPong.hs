@@ -19,8 +19,7 @@ ping pong implemented with dedicated Messages
 -}
 
 data Protocol = Ping ProcessId
-             | Pong ProcessId
-             | Done
+             | Pong
   deriving (Typeable, Generic, Show)
 
 instance Binary Protocol
@@ -32,7 +31,7 @@ ping = do
   forever $ do
       _ <- send pongPid (Ping pingPid)
       _ <- liftIO $ putStrLn "ping sent"
-      Pong pid <- expect
+      Pong <- expect
       _ <- liftIO $ putStrLn "pong received"
       liftIO $ threadDelay 1000000
   
@@ -41,9 +40,10 @@ pong = forever $ do
   myPid <- getSelfPid
   Ping pid <- expect
   _ <- liftIO $ putStrLn "ping received"
-  send pid (Pong myPid)
+  send pid Pong
   _ <- liftIO $ putStrLn "pong sent"
   liftIO $ threadDelay 1000000
+
 
 pingPongMain :: IO ()
 pingPongMain = do
