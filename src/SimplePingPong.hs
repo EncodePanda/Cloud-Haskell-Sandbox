@@ -8,7 +8,7 @@ import Control.Distributed.Process
 import Control.Distributed.Process.Node
 
 {-|
-ping pong implemented with String messages
+   ping pong implemented with String messages
 -}
 ping :: ProcessId -> Process ()
 ping ppPid = do
@@ -35,6 +35,6 @@ pingpong = do
 
 pingPongMain :: IO ()
 pingPongMain = do
-  Right t <- createTransport "127.0.0.1" "10501" defaultTCPParameters
+  Right t <- createTransport "127.0.0.1" "10501" ((,) "127.0.0.1") defaultTCPParameters
   node <- newLocalNode t initRemoteTable
   runProcess node pingpong

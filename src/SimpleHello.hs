@@ -16,6 +16,6 @@ hello = do
 
 simpleHelloWorld :: IO ()
 simpleHelloWorld = do
-  Right t <- createTransport "127.0.0.1" "10501" defaultTCPParameters
+  Right t <- createTransport "127.0.0.1" "10501" ((,) "127.0.0.1") defaultTCPParameters
   node <- newLocalNode t initRemoteTable
   runProcess node hello
