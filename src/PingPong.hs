@@ -5,6 +5,7 @@ module PingPong
   (      pingPongMain
   ) where
 
+import Logger (logInfo)
 import Network.Transport.TCP (createTransport, defaultTCPParameters)
 import Control.Monad (forever)
 import Control.Distributed.Process
@@ -30,18 +31,18 @@ ping = do
   pongPid <- spawnLocal pong
   forever $ do
       _ <- send pongPid (Ping pingPid)
-      _ <- liftIO $ putStrLn "ping sent"
+      logInfo "ping sent"
       Pong <- expect
-      _ <- liftIO $ putStrLn "pong received"
+      logInfo "pong received"
       liftIO $ threadDelay 1000000
   
 pong :: Process ()
 pong = forever $ do
   myPid <- getSelfPid
   Ping pid <- expect
-  _ <- liftIO $ putStrLn "ping received"
+  logInfo "ping received"
   send pid Pong
-  _ <- liftIO $ putStrLn "pong sent"
+  logInfo "pong sent"
   liftIO $ threadDelay 1000000
 
 

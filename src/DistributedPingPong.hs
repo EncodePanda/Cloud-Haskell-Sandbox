@@ -5,6 +5,7 @@ module DistributedPingPong
   ( pingPongMain
   ) where
 
+import Logger (logInfo)
 import System.Environment (getArgs)
 import Control.Distributed.Process.Backend.SimpleLocalnet
 import Control.Distributed.Process
@@ -20,9 +21,6 @@ data Protocol = Ping ProcessId
   deriving (Typeable, Generic, Show)
 
 instance Binary Protocol
-
-logInfo :: [Char] -> Process ()
-logInfo msg = liftIO . putStrLn $ msg
 
 pong :: Process ()
 pong = forever $ do
