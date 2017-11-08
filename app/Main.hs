@@ -1,6 +1,6 @@
 module Main where
 
-import SlaveRecognition
+import DistributedPingPong
 
 main :: IO ()
-main = recognize
+main = pingPongMain
